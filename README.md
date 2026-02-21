@@ -6,6 +6,8 @@
 ### Tutorial
 [uv-tutorial](https://chandrakundu.github.io/posts/uv-tutorial-2/)
 
+[uv-ci-cache](https://szeyusim.medium.com/optimizing-uv-in-github-actions-one-global-cache-to-rule-them-all-9c64b42aee7f)
+
 ### Setup
 uv venv --python 3.13
 source .venv/bin/activate
