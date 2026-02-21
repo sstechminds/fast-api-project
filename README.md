@@ -29,5 +29,9 @@ uv pip install -r requirements.txt
 
 uv pip list
 
+### Makefile - simplify running multiple commands with one custom command in terminal
+make create-pr
+
 ### Run application
 uv run uvicorn main:app --port 8000 --reload
+
