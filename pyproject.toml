@@ -3,10 +3,14 @@ name = "fast-api-project"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+authors = [
+    { name = "rvangala", email = "rvangala@gmail.com" }
+]
 requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.18.4",
     "fastapi>=0.129.2",
+    "ruff>=0.15.2",
     "sqlalchemy>=2.0.46",
     "uvicorn>=0.41.0",
 ]
@@ -14,4 +18,23 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
+    "ruff>=0.15.2",
 ]
+
+[tool.uv.workspace]
+members = [
+    "fast-api-project",
+    "project-name",
+]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+# Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules that
+# overlap with the use of a formatter, like Black, but we can override this behavior by
+# explicitly adding the rule.
+extend-select = ["E501"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

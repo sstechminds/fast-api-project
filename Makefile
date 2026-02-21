@@ -1,5 +1,5 @@
 create-pr:
-	echo "Creating a PR" >> random_pr.txt
+	echo "Creating a PR"
 	git add .
 	git commit -m "Create a PR" || true
 #    git push origin HEAD
