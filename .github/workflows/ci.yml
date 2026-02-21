@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "uv.lock"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup uv and Python
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.13' # Specify the desired Python version
+#          enable-cache: false
+
+      - name: Install dependencies and populate cache
+        run: |
+          echo "Building global UV cache..."
+          uv sync --group dev
+          echo "Cache populated successfully"
+
+#      - name: Install dependencies
+#        run: uv pip install -r requirements.txt # Or uv pip sync requirements.lock
+
+      - name: Save uv caches
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cache/uv
+            ~/.local/share/uv
+            .venv
+          key: uv-main-${{ hashFiles('uv.lock') }}
+
+      - name: Run tests
+        run: uv run pytest
