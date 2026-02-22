@@ -26,7 +26,8 @@ uv remove sqlalchemy
 uv export --no-hashes -o requirements.txt 
 
 uv tree
-uv sync
+uv sync --group test
+uv sync --all-groups
 
 
 ### Linting, formatting and import sorting. [Refer](https://medium.com/@abhinav.dobhal/boosting-python-development-productivity-with-uv-and-ruff-539494f6c443)
