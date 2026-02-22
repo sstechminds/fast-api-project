@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import duckdb
 
 from fastapi import FastAPI # noqa: UP035
 import httpx
@@ -52,6 +53,8 @@ async def create_item(item: Item) -> dict[str, object]:
     logger.info(model_dict)
     df = pd.DataFrame([model_dict])
     logger.info(df.head())
+    duckdb_df = duckdb.sql("SELECT name, price*2 AS double_price FROM df").df() # in-memory query
+    print(duckdb_df)
     return model_dict
 
 
