@@ -44,7 +44,7 @@ uv pip list
 
 
 ### Makefile - simplify running multiple commands with one custom command in terminal
-make create-pr
+make -i create-pr
 
 
 ### Run application
