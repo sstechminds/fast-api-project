@@ -28,7 +28,6 @@ async def say_hello(name: str):
         return {"message": "Hello World"}
     except Exception as e:
         print(f"Failed after retries: {e}")
-
     return {"message": f"Hello {name}"}
 
 
