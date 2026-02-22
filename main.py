@@ -5,6 +5,7 @@ import httpx
 from loguru import logger
 from rich import print
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+from pydantic import BaseModel
 
 print("[bold green]Task completed successfully[/bold green]")
 
@@ -29,6 +30,20 @@ async def say_hello(name: str):
     except Exception as e:
         print(f"Failed after retries: {e}")
     return {"message": f"Hello {name}"}
+
+
+# Pydantic model for validation
+class Item(BaseModel):
+    name: str
+    price: float
+    description: str | None = None # Optional field with a default of None
+
+
+# Use the model as a type hint in a path operation
+@app.post("/items/")
+async def create_item(item: Item):
+    # FastAPI validates the 'item' automatically
+    return {"item_name": item.name, "item_price": item.price}
 
 
 # https://oneuptime.com/blog/post/2026-02-03-python-httpx-async-requests/view

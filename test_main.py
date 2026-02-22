@@ -52,3 +52,32 @@ async def test_say_hello_success():
         assert response.status_code == 200
         # Based on your logic, if it succeeds, it returns "Hello World"
         assert response.json() == {"message": "Hello World"}
+
+
+@pytest.mark.asyncio
+async def test_create_item_success():
+    """Tests the /items/ POST endpoint with valid item data."""
+    async with AsyncClient(transport=transport, base_url="http://127.0.0.1:8000") as ac:
+        response = await ac.post(
+            "/items/",
+            json={"name": "Widget", "price": 1.0}
+        )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "item_name": "Widget",
+        "item_price": 1.0
+    }
+
+
+@pytest.mark.asyncio
+async def test_create_item_invalid_price_type():
+    """Tests the /items/ POST endpoint with invalid price type."""
+    async with AsyncClient(transport=transport, base_url="http://127.0.0.1:8000") as ac:
+        response = await ac.post(
+            "/items/",
+            json={"name": "Widget", "price": "invalid"}
+        )
+
+    assert response.status_code == 422  # Unprocessable Entity
+    assert "detail" in response.json()
