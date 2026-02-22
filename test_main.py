@@ -65,8 +65,9 @@ async def test_create_item_success():
 
     assert response.status_code == 200
     assert response.json() == {
-        "item_name": "Widget",
-        "item_price": 1.0
+        "name": "Widget",
+        "price": 1.0,
+        'description': None
     }
 
 

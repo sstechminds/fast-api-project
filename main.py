@@ -1,4 +1,5 @@
-from pprint import pprint
+import os
+import pandas as pd
 
 from fastapi import FastAPI # noqa: UP035
 import httpx
@@ -6,10 +7,21 @@ from loguru import logger
 from rich import print
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
-print("[bold green]Task completed successfully[/bold green]")
+load_dotenv()
+api_key = os.getenv("API_KEY")
+
+logger.info(f"API key is {api_key}")
 
 app = FastAPI()
+
+
+# Pydantic model for validation
+class Item(BaseModel):
+    name: str
+    price: float
+    description: str | None = None # Optional field with a default of None
 
 
 @app.get("/")
@@ -17,7 +29,7 @@ async def root():
     logger.info("Info message")
     # asyncio.run(async_fetch_data('http://www.google.com'))
     results = await async_fetch_data('http://www.google.com')
-    pprint('results: {results}'.format(results=results))
+    print('results: {results}'.format(results=results))
     return {"message": f"Hello world!"}
 
 
@@ -32,18 +44,16 @@ async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
 
-# Pydantic model for validation
-class Item(BaseModel):
-    name: str
-    price: float
-    description: str | None = None # Optional field with a default of None
-
-
 # Use the model as a type hint in a path operation
 @app.post("/items/")
-async def create_item(item: Item):
+async def create_item(item: Item) -> dict[str, object]:
     # FastAPI validates the 'item' automatically
-    return {"item_name": item.name, "item_price": item.price}
+    model_dict = item.model_dump()
+    logger.info(model_dict)
+    df = pd.DataFrame([model_dict])
+    logger.info(df.head())
+    return model_dict
+
 
 
 # https://oneuptime.com/blog/post/2026-02-03-python-httpx-async-requests/view
