@@ -3,6 +3,7 @@ import os
 import duckdb
 import httpx
 import pandas as pd
+import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI  # noqa: UP035
 from loguru import logger
@@ -81,3 +82,7 @@ def fetch_url(url: str) -> str:
     # Raise an exception for 4xx or 5xx status codes to trigger retry
     response.raise_for_status()
     return response.text
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
