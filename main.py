@@ -1,14 +1,14 @@
 import os
-import pandas as pd
-import duckdb
 
-from fastapi import FastAPI  # noqa: UP035
+import duckdb
 import httpx
-from loguru import logger
-from rich import print
-from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
-from pydantic import BaseModel
+import pandas as pd
 from dotenv import load_dotenv
+from fastapi import FastAPI  # noqa: UP035
+from loguru import logger
+from pydantic import BaseModel
+from rich import print
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 load_dotenv()
 api_key = os.getenv("API_KEY")
