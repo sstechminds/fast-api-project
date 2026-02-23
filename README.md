@@ -49,7 +49,4 @@ make -i create-pr
 
 
 ### Run application
-uv run uvicorn main:app --port 8000 --reload
-##### OR Refer: `project.scripts` in pyproject.toml
-uv run start
-
+python api/main.py

@@ -1,9 +1,15 @@
+import os
+import sys
 from unittest.mock import patch
 
 import pytest
 from httpx import ASGITransport, AsyncClient  # Import ASGITransport
 
-from main import app
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.join(current_dir, "../../")  # source root relative to the script
+sys.path.append(parent_dir)
+
+from api.main import app
 
 # Wrap the app in ASGITransport
 transport = ASGITransport(app=app)
@@ -13,7 +19,7 @@ transport = ASGITransport(app=app)
 async def test_root_success():
     """Tests the / route by mocking the async_fetch_data function."""
     # We patch the fetch function where it is imported/used in your app
-    with patch("main.async_fetch_data") as mocked_fetch:
+    with patch("api.main.async_fetch_data") as mocked_fetch:
         # Define what the mock should return
         mocked_fetch.return_value = "Mocked Google Content"
 
@@ -28,7 +34,7 @@ async def test_root_success():
 @pytest.mark.asyncio
 async def test_say_hello_exception_handling():
     """Tests /hello/{name} when the external fetch fails."""
-    with patch("main.fetch_url") as mocked_fetch_url:
+    with patch("api.main.fetch_url") as mocked_fetch_url:
         # Simulate an exception being raised by the external utility
         mocked_fetch_url.side_effect = Exception("Connection Failed")
 
@@ -45,7 +51,7 @@ async def test_say_hello_exception_handling():
 @pytest.mark.asyncio
 async def test_say_hello_success():
     """Tests /hello/{name} when the external fetch succeeds."""
-    with patch("main.fetch_url") as mocked_fetch_url:
+    with patch("api.main.fetch_url") as mocked_fetch_url:
         mocked_fetch_url.return_value = {"status": "success"}
 
         async with AsyncClient(transport=transport, base_url="http://test") as ac:

@@ -1,4 +1,4 @@
-create-pr:
+pr:
 	echo "Creating a PR"
 	git branch -D makefilepr
 	git checkout -b makefilepr
