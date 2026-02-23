@@ -1,11 +1,12 @@
 import pytest
-from httpx import AsyncClient, ASGITransport # Import ASGITransport
-from unittest.mock import patch, MagicMock
+from httpx import AsyncClient, ASGITransport  # Import ASGITransport
+from unittest.mock import patch
 
 from main import app
 
 # Wrap the app in ASGITransport
 transport = ASGITransport(app=app)
+
 
 @pytest.mark.asyncio
 async def test_root_success():
@@ -20,7 +21,7 @@ async def test_root_success():
 
         assert response.status_code == 200
         assert response.json() == {"message": "Hello world!"}
-        mocked_fetch.assert_called_once_with('http://www.google.com')
+        mocked_fetch.assert_called_once_with("http://www.google.com")
 
 
 @pytest.mark.asyncio
@@ -58,27 +59,17 @@ async def test_say_hello_success():
 async def test_create_item_success():
     """Tests the /items/ POST endpoint with valid item data."""
     async with AsyncClient(transport=transport, base_url="http://127.0.0.1:8000") as ac:
-        response = await ac.post(
-            "/items/",
-            json={"name": "Widget", "price": 1.0}
-        )
+        response = await ac.post("/items/", json={"name": "Widget", "price": 1.0})
 
     assert response.status_code == 200
-    assert response.json() == {
-        "name": "Widget",
-        "price": 1.0,
-        'description': None
-    }
+    assert response.json() == {"name": "Widget", "price": 1.0, "description": None}
 
 
 @pytest.mark.asyncio
 async def test_create_item_invalid_price_type():
     """Tests the /items/ POST endpoint with invalid price type."""
     async with AsyncClient(transport=transport, base_url="http://127.0.0.1:8000") as ac:
-        response = await ac.post(
-            "/items/",
-            json={"name": "Widget", "price": "invalid"}
-        )
+        response = await ac.post("/items/", json={"name": "Widget", "price": "invalid"})
 
     assert response.status_code == 422  # Unprocessable Entity
     assert "detail" in response.json()
